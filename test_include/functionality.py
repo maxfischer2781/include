@@ -15,7 +15,7 @@ class TestHook(unittest.TestCase):
         container.write(textwrap.dedent("""\
         class FileClass(object):
             shared_secret = %s
-        """ % shared_secret))
+        """ % shared_secret).encode('ASCII'))
         container.flush()
         module = include.include_file(container.name)
         self.assertEqual(module.FileClass.shared_secret, shared_secret)
