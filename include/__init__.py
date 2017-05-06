@@ -10,6 +10,5 @@ def include_file(path):
         files.install()
     import_hook = IMPORT_HOOKS['file']
     module_path = import_hook.path2module(path)
-    print(module_path)
     __import__(module_path)
     return sys.modules[module_path]
