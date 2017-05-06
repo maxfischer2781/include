@@ -1,0 +1,4 @@
+coverage:
+  ignore:
+    - test_include
+    - include/__about__.py
