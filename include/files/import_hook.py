@@ -22,7 +22,7 @@ class FilePathLoader(object):
 
     @prefix.setter
     def prefix(self, value):
-        self._prefix = value + '::'
+        self._prefix = value + '.'
 
     def module2path(self, module_name):
         """Convert a module name to a path"""

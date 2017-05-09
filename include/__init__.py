@@ -7,10 +7,10 @@ _IMPORT_HOOKS = weakref.WeakValueDictionary()
 
 
 def include_file(path):
-    if 'file' not in _IMPORT_HOOKS:
-        from . import files
+    from . import files
+    if files.INCLUDE_SCHEME not in _IMPORT_HOOKS:
         files.install()
-    import_hook = _IMPORT_HOOKS['file']
+    import_hook = _IMPORT_HOOKS[files.INCLUDE_SCHEME]
     module_path = import_hook.path2module(path)
     __import__(module_path)
     return sys.modules[module_path]
