@@ -15,6 +15,12 @@ class TestHook(unittest.TestCase):
         container.write(textwrap.dedent("""\
         class FileClass(object):
             shared_secret = %s
+
+            def __init__(self, value):
+                self.value = value
+
+            def __eq__(self, other):
+                return self.value == other.value
         """ % shared_secret).encode('ASCII'))
         container.flush()
         module = include.include_file(container.name)
@@ -22,8 +28,11 @@ class TestHook(unittest.TestCase):
         for _ in range(3):
             self.assertEqual(class_id, id(module.FileClass))
             self.assertEqual(module.FileClass.shared_secret, shared_secret)
-            self._test_defined(module.FileClass)
+            self._test_defined(module.FileClass, ('shared_secret', ))
+            self._test_defined(module.FileClass(5), ('shared_secret', 'value'))
             module = include.include_file(container.name)
 
-    def _test_defined(self, obj):
+    def _test_defined(self, obj, attr_names=()):
         self.assertEqual(obj, pickle.loads(pickle.dumps(obj)))
+        for name in attr_names:
+            self.assertEqual(getattr(obj, name), getattr(pickle.loads(pickle.dumps(obj)), name))
