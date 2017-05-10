@@ -24,14 +24,14 @@ class TestHook(unittest.TestCase):
                 return self.value == other.value
         """ % shared_secret).encode('ASCII'))
         container.flush()
-        module = include.include_file(container.name)
+        module = include.path(container.name)
         class_id = id(module.FileClass)
         for _ in range(3):
             self.assertEqual(class_id, id(module.FileClass))
             self.assertEqual(module.FileClass.shared_secret, shared_secret)
             self._test_defined(module.FileClass, ('shared_secret', ))
             self._test_defined(module.FileClass(5), ('shared_secret', 'value'))
-            module = include.include_file(container.name)
+            module = include.path(container.name)
 
     def _test_defined(self, obj, attr_names=()):
         self.assertEqual(obj, pickle.loads(pickle.dumps(obj)))
