@@ -3,6 +3,7 @@ import unittest
 import tempfile
 import textwrap
 import pickle
+import multiprocessing
 
 import include
 
@@ -36,3 +37,8 @@ class TestHook(unittest.TestCase):
         self.assertEqual(obj, pickle.loads(pickle.dumps(obj)))
         for name in attr_names:
             self.assertEqual(getattr(obj, name), getattr(pickle.loads(pickle.dumps(obj)), name))
+        # test in separate process
+        pool = multiprocessing.Pool(1)
+        for name in attr_names:
+            self.assertEqual(getattr(obj, name), pool.apply(getattr, (obj, name)))
+        pool.close()
