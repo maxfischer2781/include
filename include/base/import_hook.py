@@ -64,8 +64,20 @@ class BaseIncludeLoader(object):
         """
         raise NotImplementedError
 
-    def find_module(self, name, path=None):
-        if name.startswith(self.prefix):
+    def find_module(self, fullname, path=None):
+        """
+        Find the appropriate loader for module ``name``
+
+        :param fullname: ``__name__`` of the module to import
+        :type fullname: str
+        :param path: ``__path__`` of the *parent* package already imported
+        :type path: str or None
+        """
+        # path points to the top-level package path if any
+        # and we can only import sub-modules/-packages
+        if path is None:
+            return
+        if fullname.startswith(self.prefix):
             return self
         else:
             return None
