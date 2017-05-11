@@ -23,14 +23,14 @@ class FilePathLoader(import_hook.BaseIncludeLoader):
 
     Note that ``module_prefix`` must point to a valid package, not a module.
     """
-    def module2path(self, module_name):
+    def module2uri(self, module_name):
         """Convert a module name to a path"""
         assert module_name.startswith(self.prefix), 'incompatible module name'
         path = module_name[len(self._prefix):]
         path = path.replace('&#DOT', '.')
         return path.replace('&#SEP', os.sep)
 
-    def path2module(self, path):
+    def uri2module(self, path):
         """Convert a path to a module name"""
         module_name = path.replace('.', '&#DOT')
         module_name = module_name.replace(os.sep, '&#SEP')
@@ -45,7 +45,7 @@ class FilePathLoader(import_hook.BaseIncludeLoader):
         """
         if name in sys.modules:
             return sys.modules[name]
-        path = self.module2path(name)
+        path = self.module2uri(name)
         if not os.path.isfile(path):
             raise ImportError("Missing module source file %r" % path)
         else:

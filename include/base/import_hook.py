@@ -3,7 +3,7 @@ import os
 
 class BaseIncludeLoader(object):
     """
-    Import hook to load python modules from an arbitrary location
+    Import hook to load Python modules from an arbitrary location
 
     :param module_prefix: prefix for modules to import
     :type module_prefix: str
@@ -25,7 +25,10 @@ class BaseIncludeLoader(object):
 
     The ``encoded_name`` is a free form field. The base class provides means to
     escape invalid and reserved symbols (``/`` and ``.``), but subclasses are
-    free to use them if it is suitable for them.
+    free to use them if it is suitable for them. Hooks should use ``encoded_name``
+    to store a URI (or similar) to retrieve source code. As per Python rules,
+    including a dot (``.``) in the ``encoded_name`` requires the hook to import
+    each portion separately.
     """
     def __init__(self, module_prefix):
         self._prefix = ''
@@ -39,16 +42,16 @@ class BaseIncludeLoader(object):
     def prefix(self, value):
         self._prefix = value + '.'
 
-    def name2encoded(self, module_name):
-        """Convert an unencoded name to an encoded name"""
+    def module2uri(self, module_name):
+        """Convert an unencoded source uri to an encoded module name"""
         assert module_name.startswith(self.prefix), 'incompatible module name'
         path = module_name[len(self._prefix):]
         path = path.replace('&#DOT', '.')
         return path.replace('&#SEP', os.sep)
 
-    def encoded2name(self, path):
-        """Convert an encoded name to an unencoded name"""
-        module_name = path.replace('.', '&#DOT')
+    def uri2module(self, uri):
+        """Convert an encoded module name to an unencoded source uri"""
+        module_name = uri.replace('.', '&#DOT')
         module_name = module_name.replace(os.sep, '&#SEP')
         return self.prefix + module_name
 
