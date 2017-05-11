@@ -2,28 +2,27 @@ import os
 import sys
 import imp
 
+from ..base import import_hook
 
-class FilePathLoader(object):
+
+class FilePathLoader(import_hook.BaseIncludeLoader):
     """
     Load python file from their path
 
     This import hook allows using encoded paths as module names to load modules
     directly from their file.  File path modules use a special naming convention as
-    ``<prefix>::<escaped path>``, where ``escaped path`` is stripped of any
+    ``<module_prefix>.<escaped path>``, where ``escaped path`` is stripped of any
     import specific symbols (``.`` and ``/``).
+
+    :param module_prefix: prefix for modules to import
+    :type module_prefix: str
+
+    The ``module_prefix`` is used to distinguish regular and file based imports.
+    It may be any valid module or package name, including dots. Logically, all
+    imported files will be submodules of the package pointed to by ``module_prefix``.
+
+    Note that ``module_prefix`` must point to a valid package, not a module.
     """
-    def __init__(self, prefix):
-        self._prefix = ''
-        self.prefix = prefix
-
-    @property
-    def prefix(self):
-        return self._prefix
-
-    @prefix.setter
-    def prefix(self, value):
-        self._prefix = value + '.'
-
     def module2path(self, module_name):
         """Convert a module name to a path"""
         assert module_name.startswith(self.prefix), 'incompatible module name'
@@ -54,9 +53,3 @@ class FilePathLoader(object):
                 module = imp.load_module(name, module_source, path, ('.py', 'U', imp.PY_SOURCE))
         sys.modules[name] = module
         return module
-
-    def find_module(self, name, path=None):
-        if name.startswith(self.prefix):
-            return self
-        else:
-            return None
