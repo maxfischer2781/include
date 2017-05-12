@@ -39,7 +39,7 @@ class EncodedModuleLoader(import_hook.BaseIncludeLoader):
         if name in sys.modules:
             return sys.modules[name]
         module_source = self.module2uri(name)
-        module_container = tempfile.NamedTemporaryFile(delete=False)
+        module_container = tempfile.NamedTemporaryFile(suffix='.py', delete=False)
         with module_container:
             module_container.write(module_source)
             module_container.file.seek(0)
