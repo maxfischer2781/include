@@ -14,3 +14,13 @@ def path(file_path):
     module_path = import_hook.uri2module(file_path)
     __import__(module_path)
     return sys.modules[module_path]
+
+
+def source(source_code):
+    from . import encoded
+    if encoded.IMPORT_PATH not in _IMPORT_HOOKS:
+        encoded.install()
+    import_hook = _IMPORT_HOOKS[encoded.IMPORT_PATH]
+    module_path = import_hook.uri2module(source_code)
+    __import__(module_path)
+    return sys.modules[module_path]

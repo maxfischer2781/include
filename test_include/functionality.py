@@ -33,6 +33,28 @@ class TestHook(unittest.TestCase):
             self._test_defined(module.FileClass(5), ('shared_secret', 'value'))
             module = include.path(container.name)
 
+    def test_import_source(self):
+        """import source code as module"""
+        shared_secret = 1337
+        source_code = textwrap.dedent("""\
+        class FileClass(object):
+            shared_secret = %s
+
+            def __init__(self, value):
+                self.value = value
+
+            def __eq__(self, other):
+                return self.value == other.value
+        """ % shared_secret).encode('ASCII')
+        module = include.source(source_code)
+        class_id = id(module.FileClass)
+        for _ in range(3):
+            self.assertEqual(class_id, id(module.FileClass))
+            self.assertEqual(module.FileClass.shared_secret, shared_secret)
+            self._test_defined(module.FileClass, ('shared_secret', ))
+            self._test_defined(module.FileClass(5), ('shared_secret', 'value'))
+            module = include.source(source_code)
+
     def _test_defined(self, obj, attr_names=()):
         self.assertEqual(obj, pickle.loads(pickle.dumps(obj)))
         for name in attr_names:
