@@ -64,3 +64,4 @@ class TestHook(unittest.TestCase):
         for name in attr_names:
             self.assertEqual(getattr(obj, name), pool.apply(getattr, (obj, name)))
         pool.close()
+        pool.join()
