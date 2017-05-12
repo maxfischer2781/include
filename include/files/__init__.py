@@ -1,3 +1,6 @@
+"""
+Load modules from files
+"""
 from __future__ import absolute_import
 from .. import mount
 

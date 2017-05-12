@@ -31,29 +31,29 @@ class BaseIncludeLoader(object):
     each portion separately.
     """
     def __init__(self, module_prefix):
-        self._prefix = ''
-        self.prefix = module_prefix
+        self._module_prefix = ''
+        self.module_prefix = module_prefix
 
     @property
-    def prefix(self):
-        return self._prefix
+    def module_prefix(self):
+        return self._module_prefix
 
-    @prefix.setter
-    def prefix(self, value):
-        self._prefix = value + '.'
+    @module_prefix.setter
+    def module_prefix(self, value):
+        self._module_prefix = value + '.'
 
     def module2uri(self, module_name):
-        """Convert an unencoded source uri to an encoded module name"""
-        assert module_name.startswith(self.prefix), 'incompatible module name'
-        path = module_name[len(self._prefix):]
+        """Convert an encoded module name to an unencoded source uri"""
+        assert module_name.startswith(self.module_prefix), 'incompatible module name'
+        path = module_name[len(self._module_prefix):]
         path = path.replace('&#DOT', '.')
         return path.replace('&#SEP', os.sep)
 
     def uri2module(self, uri):
-        """Convert an encoded module name to an unencoded source uri"""
+        """Convert an unencoded source uri to an encoded module name"""
         module_name = uri.replace('.', '&#DOT')
         module_name = module_name.replace(os.sep, '&#SEP')
-        return self.prefix + module_name
+        return self.module_prefix + module_name
 
     def load_module(self, name):
         """
@@ -77,7 +77,7 @@ class BaseIncludeLoader(object):
         # and we can only import sub-modules/-packages
         if path is None:
             return
-        if fullname.startswith(self.prefix):
+        if fullname.startswith(self.module_prefix):
             return self
         else:
             return None
