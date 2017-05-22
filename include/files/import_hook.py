@@ -22,10 +22,18 @@ class FilePathLoader(import_hook.BaseIncludeLoader):
         if name in sys.modules:
             return sys.modules[name]
         path = self.module2uri(name)
-        if not os.path.isfile(path):
-            raise ImportError("Missing module source file %r" % path)
+        if os.path.isfile(path):
+            return self._load_module(name, path)
+        elif os.path.isdir(path):
+            return self._load_package(name, path)
         else:
-            module = imp.load_source(name, path)
+            raise ImportError("Missing module source file %r" % path)
+
+    def _load_module(self, name, path):
+        module = imp.load_source(name, path)
         module.__loader__ = self
         sys.modules[name] = module
         return module
+
+    def _load_package(self, name, path):
+        raise NotImplementedError
