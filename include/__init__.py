@@ -19,12 +19,7 @@ def path(file_path):
     If invoked again with the same ``file_path``, the same module is returned.
     """
     from . import files
-    if files.IMPORT_PATH not in _IMPORT_HOOKS:
-        files.install()
-    import_hook = _IMPORT_HOOKS[files.IMPORT_PATH]
-    module_path = import_hook.uri2module(file_path)
-    __import__(module_path)
-    return sys.modules[module_path]
+    return _import_url(module_url=file_path, include_type=files)
 
 
 def source(source_code):
@@ -40,9 +35,13 @@ def source(source_code):
     If invoked again with the same ``source_code``, the same module is returned.
     """
     from . import encoded
-    if encoded.IMPORT_PATH not in _IMPORT_HOOKS:
-        encoded.install()
-    import_hook = _IMPORT_HOOKS[encoded.IMPORT_PATH]
-    module_path = import_hook.uri2module(source_code)
+    return _import_url(module_url=source_code, include_type=encoded)
+
+
+def _import_url(module_url, include_type):
+    if include_type.IMPORT_PATH not in _IMPORT_HOOKS:
+        include_type.install()
+    import_hook = _IMPORT_HOOKS[include_type.IMPORT_PATH]
+    module_path = import_hook.uri2module(module_url)
     __import__(module_path)
     return sys.modules[module_path]
