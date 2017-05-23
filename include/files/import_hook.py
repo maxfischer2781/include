@@ -36,4 +36,15 @@ class FilePathLoader(import_hook.BaseIncludeLoader):
         return module
 
     def _load_package(self, name, path):
-        raise NotImplementedError
+        # regular package with content
+        init_path = os.path.join(path, '__init__.py')
+        if os.path.exists(init_path):
+            module = imp.load_source(name, init_path)
+        # Py3 namespace package
+        elif os.path.isdir(path):
+            module = imp.new_module(name)
+        else:
+            raise ImportError("Missing package source directory %r" % path)
+        module.__loader__ = self
+        sys.modules[name] = module
+        return module
