@@ -1,5 +1,10 @@
 """
 Load modules from encoded source code
+
+This include type encodes raw source code as a module name.
+The resulting module is self-contained:
+it can be stored, loaded and transferred without the original source code.
+Only the dependencies of the module (including :py:mpd:`include`) must be satisfied.
 """
 from __future__ import absolute_import
 from .. import mount
