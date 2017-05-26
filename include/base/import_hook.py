@@ -45,7 +45,7 @@ class BaseIncludeLoader(object):
     def module2uri(self, module_name):
         """Convert an encoded module name to an unencoded source uri"""
         assert module_name.startswith(self.module_prefix), 'incompatible module name'
-        path = module_name[len(self._module_prefix):]
+        path = module_name[len(self.module_prefix):]
         path = path.replace('&#DOT', '.')
         return path.replace('&#SEP', os.sep)
 
