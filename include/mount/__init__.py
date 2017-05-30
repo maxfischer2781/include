@@ -32,5 +32,5 @@ class MountLoader(object):
         return mount.replace(self.mount_prefix, self.module_prefix)
 
 
-MOUNT_LOADER = MountLoader(mount_prefix=__name__, module_prefix=__name__.split('.', 1)[0])
-sys.meta_path.append(MOUNT_LOADER)
+DEFAULT_MOUNT_LOADER = MountLoader(mount_prefix=__name__, module_prefix=__name__.split('.', 1)[0])
+sys.meta_path.append(DEFAULT_MOUNT_LOADER)
