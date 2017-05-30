@@ -40,7 +40,7 @@ class BaseIncludeLoader(object):
 
     @module_prefix.setter
     def module_prefix(self, value):
-        self._module_prefix = value + '.'
+        self._module_prefix = value.rstrip('.') + '.'
 
     def module2uri(self, module_name):
         """Convert an encoded module name to an unencoded source uri"""
