@@ -81,3 +81,8 @@ class BaseIncludeLoader(object):
             return self
         else:
             return None
+
+    def __repr__(self):
+        return '<%s.%s for path %r at 0x%x>' % (
+            self.__class__.__module__, self.__class__.__name__, self.module_prefix, id(self)
+        )
