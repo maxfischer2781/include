@@ -25,10 +25,14 @@ class MountLoader(object):
 
     def is_module(self, name):
         """Test that `name` is a module name"""
+        if self.module_prefix.startswith(self.mount_prefix):
+            return name.startswith(self.module_prefix)
         return name.startswith(self.module_prefix) and not name.startswith(self.mount_prefix)
 
     def is_mount(self, name):
         """Test that `name` is a mount name"""
+        if self.mount_prefix.startswith(self.module_prefix):
+            return name.startswith(self.mount_prefix)
         return name.startswith(self.mount_prefix) and not name.startswith(self.module_prefix)
 
     def name2mount(self, name):
