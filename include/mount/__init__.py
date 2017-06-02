@@ -10,8 +10,10 @@ class MountLoader(object):
         """Load and return a module"""
         if name in sys.modules:
             return sys.modules[name]
+        # load the actual import hook module
         module_name = self.mount2name(name)
         __import__(module_name)
+        # alias the import hook module to the mount, so both can be used interchangeably
         module = sys.modules[name] = sys.modules[module_name]
         module.install()
         return module
@@ -21,14 +23,24 @@ class MountLoader(object):
             return self
         return None
 
+    def is_module(self, name):
+        """Test that `name` is a module name"""
+        return name.startswith(self.module_prefix) and not name.startswith(self.mount_prefix)
+
+    def is_mount(self, name):
+        """Test that `name` is a mount name"""
+        return name.startswith(self.mount_prefix) and not name.startswith(self.module_prefix)
+
     def name2mount(self, name):
-        if not name.startswith(self.module_prefix):
-            raise ValueError('Module name %r does not share prefix %r' % (name, self.module_prefix))
+        """Convert a module name to a mount name"""
+        if not self.is_module(name):
+            raise ValueError('%r is not a supported module name' % (name, ))
         return name.replace(self.module_prefix, self.mount_prefix)
 
     def mount2name(self, mount):
-        if not mount.startswith(self.mount_prefix):
-            raise ValueError('Module mount %r does not share prefix %r' % (mount, self.mount_prefix))
+        """Convert a mount name to a module name"""
+        if not self.is_mount(mount):
+            raise ValueError('%r is not a supported mount name' % (mount,))
         return mount.replace(self.mount_prefix, self.module_prefix)
 
 

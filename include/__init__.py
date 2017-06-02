@@ -4,6 +4,8 @@ import weakref
 
 # weak reference to installed hooks
 _IMPORT_HOOKS = weakref.WeakValueDictionary()
+# must have _IMPORT_HOOKS to bootstrap hook disabling
+from .inhibit import DISABLED_TYPES
 
 
 def path(file_path):
@@ -45,3 +47,29 @@ def _import_url(module_url, include_type):
     module_path = import_hook.uri2module(module_url)
     __import__(module_path)
     return sys.modules[module_path]
+
+
+def disable(identifier, children_only=False):
+    """
+    Disable an include type
+
+    :param identifier: module or name of the include type
+    :param children_only: disable the include type only for child processes, not the current process
+
+    The ``identifier`` can be specified in multiple ways to disable an include type.
+    See :py:meth:`~.DisabledIncludeTypes.disable` for details.
+    """
+    DISABLED_TYPES.disable(identifier=identifier, children_only=children_only)
+
+
+def enable(identifier, exclude_children=False):
+    """
+    Enable a previously disabled include type
+
+    :param identifier: module or name of the include type
+    :param exclude_children: disable the include type only for child processes, not the current process
+
+    The ``identifier`` can be specified in multiple ways to disable an include type.
+    See :py:meth:`~.DisabledIncludeTypes.disable` for details.
+    """
+    DISABLED_TYPES.enable(identifier=identifier, exclude_children=exclude_children)
