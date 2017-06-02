@@ -1,0 +1,16 @@
+    digraph g {
+        graph [rankdir=LR]
+        compound=true;
+        a1 [shape=box, style=rounded, label=""];
+        a1 -> a1 [label=send];
+        chain_a [shape=box, style=rounded, label=chain, width=1.5];
+        chain_a -> chain_a [label=send];
+        chain_b [shape=box, style=rounded, label=chain, width=1.5];
+        chain_b -> chain_b [label=send];
+        in, out [style=invis]
+        in -> a1 [label=send]
+        a1 -> chain_a [style=dotted, arrowhead="veevee", lhead=cluster_c]
+        a1 -> chain_b [style=dotted, arrowhead="veevee", lhead=cluster_b]
+        chain_a -> out [label=return, ltail=cluster_b]
+        chain_b -> out [label=return, ltail=cluster_c]
+    }
