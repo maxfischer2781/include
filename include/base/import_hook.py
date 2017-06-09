@@ -36,11 +36,13 @@ class BaseIncludeLoader(object):
 
     @property
     def module_prefix(self):
-        return self._module_prefix
+        raw_prefix = self._module_prefix.rstrip('.')
+        include_type = raw_prefix.split('.')[-1]
+        return raw_prefix + '.' + include_type.upper() + '::'
 
     @module_prefix.setter
     def module_prefix(self, value):
-        self._module_prefix = value.rstrip('.') + '.'
+        self._module_prefix = value.rstrip('.')
 
     def module2uri(self, module_name):
         """Convert an encoded module name to an unencoded source uri"""
@@ -84,5 +86,5 @@ class BaseIncludeLoader(object):
 
     def __repr__(self):
         return '<%s.%s for path %r at 0x%x>' % (
-            self.__class__.__module__, self.__class__.__name__, self.module_prefix, id(self)
+            self.__class__.__module__, self.__class__.__name__, self._module_prefix, id(self)
         )
