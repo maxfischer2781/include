@@ -32,6 +32,8 @@ The :py:mod:`include` library is built to use code from arbitrary sources in you
 In contrast to ``eval``, ``exec`` and other code execution, :py:mod:`include` creates fully featured modules.
 This makes code viable for pickling, multiprocessing, IPC and more.
 
+Using :py:mod:`include` is straight forward - you only need the top level functions of the module:
+
 .. code:: python
 
    import include
