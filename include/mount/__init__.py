@@ -19,7 +19,7 @@ class MountLoader(object):
         return module
 
     def find_module(self, name, path=None):
-        if name.startswith(self.mount_prefix):
+        if name.startswith(self.mount_prefix) and name.count('.') - self.mount_prefix.count('.') == 1:
             return self
         return None
 
