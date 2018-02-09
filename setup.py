@@ -26,6 +26,7 @@ if __name__ == '__main__':
         # dependencies
         install_requires=[],
         # metadata for package search
+        license='MIT',
         # https://pypi.python.org/pypi?%3Aaction=list_classifiers
         classifiers=[
             'Development Status :: 4 - Beta',
