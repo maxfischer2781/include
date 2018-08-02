@@ -19,6 +19,11 @@ def path(file_path):
 
     Comparable to ``execfile``, but respects the rules and constraints of modules.
     If invoked again with the same ``file_path``, the same module is returned.
+
+    .. code:: python
+
+       import include
+       my_config = include.path('/etc/sysconfig/app_conf.py')
     """
     from . import files
     return _import_url(module_url=file_path, include_type=files)
@@ -35,6 +40,17 @@ def source(source_code):
 
     Comparable to ``exec`` in a separate ``globals`` namespace, but respects the rules and constraints of modules.
     If invoked again with the same ``source_code``, the same module is returned.
+
+    .. code:: python
+
+       >>> import include
+       >>> my_module = include.source(
+       >>> \"\"\"
+       ... def foo():
+       ...      return {constant}
+       ... \"\"\".format(constant=3))
+       >>> my_module.foo() == 3
+       True
     """
     from . import encoded
     return _import_url(module_url=source_code, include_type=encoded)

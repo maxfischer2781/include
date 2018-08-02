@@ -18,12 +18,13 @@ To disable include types, both a code and environment interface are available:
 **Environment Variable** :py:envvar:`PY_INCLUDE_DISABLE`
     A list of include types to disable.
     Types are indicated by their module name, such as ``files`` for the ``include.files`` type.
-    Multiple types are delimited by commas, with optional whitespace.
+    Multiple types may be delimited by commas, with optional whitespace.
     For example, the list ``files, encoded`` disables imports from files and encoded source.
 
 **Code Interface** :py:func:`include.disable` and :py:func:`include.enable`
     Functions to disable or enable individual include types.
-    Types are indicated by a variety of identifiers, see :py:meth:`~.DisabledIncludeTypes.disable`.
+    Types may be indicated by a variety of identifiers.
+    See :py:meth:`~.DisabledIncludeTypes.disable` for details.
 
 
 Bootstrapping Mechanism
@@ -33,7 +34,7 @@ Each :py:mod:`include` corresponds to an include type *implementation* and *name
 The former provides the actual import machinery, such as hooks and name translation.
 The later is a namespace module, into which all modules imported by :py:mod:`include` are inserted.
 
-For each include type, as separate namespace is used.
+For each include type, a separate namespace is used.
 The namespace itself ensures that its include type is installed.
 Thus, re-importing a module in a separate process first loads its namespace and thus its import machinery.
 
